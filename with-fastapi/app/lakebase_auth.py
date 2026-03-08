@@ -6,7 +6,7 @@ from urllib.request import Request, urlopen
 
 
 def get_password() -> str:
-    host = os.environ["DATABRICKS_HOST"]
+    host = os.environ["DATABRICKS_HOST"].rstrip("/")
     client_id = os.environ["DATABRICKS_CLIENT_ID"]
     client_secret = os.environ["DATABRICKS_CLIENT_SECRET"]
     endpoint = os.environ["LAKEBASE_ENDPOINT"]

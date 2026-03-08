@@ -4,7 +4,7 @@ import json
 import os
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
@@ -16,7 +16,7 @@ _expires_at: float = 0.0
 
 def _refresh() -> None:
     global _cached_token, _expires_at
-    host = os.environ["DATABRICKS_HOST"]
+    host = os.environ["DATABRICKS_HOST"].rstrip("/")
     client_id = os.environ["DATABRICKS_CLIENT_ID"]
     client_secret = os.environ["DATABRICKS_CLIENT_SECRET"]
     endpoint = os.environ["LAKEBASE_ENDPOINT"]
@@ -39,7 +39,8 @@ def _refresh() -> None:
     with urlopen(req2) as res:
         data2 = json.loads(res.read().decode())
     _cached_token = data2["token"]
-    _expires_at = datetime.fromisoformat(data2["expire_time"].replace("Z", "+00:00")).timestamp()
+    expire_str = data2["expire_time"].rstrip("Z")
+    _expires_at = datetime.fromisoformat(expire_str).replace(tzinfo=timezone.utc).timestamp()
 
 
 def get_password() -> str:

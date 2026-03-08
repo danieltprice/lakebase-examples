@@ -14,7 +14,6 @@ Examples are organized around:
 - **Languages**: Python, Go, Rust, Java, Ruby, Dart, Elixir, .NET, and more
 - **Frameworks**: FastAPI, Django, Flask, Next.js, Express, NestJS, Laravel, and more
 - **ORMs & query builders**: SQLAlchemy, Prisma, Drizzle, GORM, Sequelize, and more
-- **Deployment targets**: Vercel, Cloudflare Workers, Netlify, Railway, Render, Heroku, Deno, and more
 
 ## Important notices
 

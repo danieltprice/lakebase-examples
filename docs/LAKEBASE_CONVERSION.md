@@ -42,6 +42,43 @@ Each app README should be a **Databricks README**:
 - “Before you run” checklist: create Lakebase instance, service principal, grant DB access, find `LAKEBASE_ENDPOINT` / `LAKEBASE_HOST`
 - No Neon branding or links
 
+## Lessons from working examples (Django, with-python-psycopg)
+
+These patterns come from **verified working** examples (`~/with-django`, `~/with-python-psycopg`) and improve success when applied elsewhere:
+
+**Python `lakebase_auth` modules**
+
+1. **Trim trailing slash on `DATABRICKS_HOST`**  
+   Use `host = os.environ["DATABRICKS_HOST"].rstrip("/")` before building URLs. Avoids `https://host//oidc/...` if the user has a trailing slash in `.env`.
+
+2. **Robust expire-time parsing**  
+   The API returns `expire_time` as ISO 8601 (e.g. `"2025-03-08T12:00:00Z"`). Parse with:
+   - `expire_str = body["expire_time"].rstrip("Z")`
+   - `expires_at = datetime.fromisoformat(expire_str).replace(tzinfo=timezone.utc).timestamp()`
+   This avoids `fromisoformat()` issues with the `Z` suffix and keeps timestamps in UTC.
+
+3. **OIDC form body**  
+   Use `urllib.parse.urlencode({"grant_type": "client_credentials", "scope": "all-apis"}).encode()` for the OIDC POST body so it’s valid `application/x-www-form-urlencoded`.
+
+4. **Split token fetch (optional but helpful)**  
+   Separate `_fetch_api_token()` (OIDC) and `_fetch_db_token()` (postgres/credentials) returning `(token, expires_at)`. Clearer and easier to debug.
+
+5. **Docstrings**  
+   At the top of the module, list required and optional env vars; add a short usage example for `get_connection_kwargs()` or `get_password()`.
+
+**Django specifically**
+
+- Put `lakebase_auth` **inside the project package** (e.g. `myproject/lakebase_auth.py`) and import with `from myproject.lakebase_auth import get_password`. That way the import works regardless of `PYTHONPATH` or cwd.
+
+**Node / JS**
+
+- When building the OIDC or credentials URL, trim a trailing slash from `process.env.DATABRICKS_HOST` if present (e.g. `const host = (process.env.DATABRICKS_HOST || '').replace(/\/$/, '')`).
+
+**Applied across the repo**
+
+- **Python:** `host.rstrip("/")` and robust expire parsing (rstrip `Z` + `timezone.utc`) are now used in `with-flask`, `with-python-asyncpg`, `with-sqlalchemy-asyncpg`, `with-fastapi` (host only), and `ai/langchain/react-agent-python` lakebase_auth modules. Django and with-python-psycopg already matched the working examples.
+- **Node:** `with-express` lakebase.js trims trailing slash on `DATABRICKS_HOST`. The same pattern can be applied to other Node/TS lakebase modules if needed.
+
 ## Converted (done)
 
 - **with-analog** – pg pool + lakebase (already done)
@@ -59,7 +96,7 @@ Each app README should be a **Databricks README**:
 - **with-sveltekit** – pg pool + lakebase
 - **with-sveltekit-feature-flags** – pg pool + lakebase
 - **with-waku** – pg pool + lakebase
-- **Next.js (Node):** with-nextjs-serverless-functions, with-nextjs-server-components, with-nextjs-server-actions, with-nextjs-get-static-props, with-nextjs-get-server-side-props, with-nextjs-aws-s3 – pg pool + lakebase
+- **Next.js (Node):** with-nextjs-serverless-functions, with-nextjs-server-components, with-nextjs-server-actions, with-nextjs-get-static-props, with-nextjs-get-server-side-props – pg pool + lakebase
 - **Next.js (Prisma Node):** with-nextjs-prisma – getPrisma() + connection string cache
 - **Next.js (Drizzle Node):** with-nextjs-drizzle-local-vercel – pg pool + drizzle-orm/node-postgres
 - **Next.js (Edge):** with-nextjs-edge-functions – serverless driver + getSql() cached TTL
@@ -98,12 +135,6 @@ Each app README should be a **Databricks README**:
 - **Rust Cloudflare Workers:** with-rust-cloudflare-workers – README + .env; POSTGRES_URL + LAKEBASE_HOST from env (token from script)
 - **Knex:** with-knex – lib/lakebase.js getConnectionString() + knex({ connection: { connectionString } })
 - **Micronaut Kotlin:** with-micronaut-kotlin – application.yml uses LAKEBASE_JDBC_URL, LAKEBASE_USERNAME, LAKEBASE_PASSWORD from env
-- **deploy-with-render, -railway, -heroku:** neon-* example apps use lib/lakebase.js pool; README + .env.example for Lakebase
-- **deploy-with-netlify-functions:** neon-netlify-example uses netlify/functions/lakebase.mjs getSql(); README + .env.example
-- **deploy-with-cloudflare-workers:** my-neon-worker uses src/lakebase.js getSql(env); README + .env.example
-- **deploy-with-cloudflare-pages:** functions/lakebase.js getSql(env); my-neon-page/functions/lakebase.js; README + .env.example
-- **deploy-with-deno:** README + .env.example; DATABASE_URL from token script
-- **auth/with-authjs-next:** lib/lakebase.ts pg Pool; auth.ts adapter + API routes + page use pool
 - **ai/hybrid-search-nextjs:** lib/lakebase.ts getSql(); app/api/chat and app/api/learn use getSql()
 - **ai/inngest/rag-starter-nextjs:** src/lib/lakebase.ts getSql(); API routes and inngest/functions.ts use getSql()
 - **ai/llamaindex/semantic-search-nextjs, reverse-image-search-nextjs, rag-nextjs, chatbot-nextjs, chat-with-pdf-nextjs:** lib/lakebase.ts getConnectionString(); lib/vectorStore.ts exports getVectorStore() that awaits getConnectionString() and returns PGVectorStore; API routes use await getVectorStore()

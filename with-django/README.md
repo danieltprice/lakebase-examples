@@ -1,6 +1,6 @@
 # Getting started with Databricks Lakebase and Django
 
-This Django 5 project connects to Databricks Lakebase (PostgreSQL) when Lakebase env vars are set. It uses `lakebase_auth.get_connection_kwargs()` for token rotation; otherwise it falls back to `DATABASE_URL`.
+This Django 5 project connects to Databricks Lakebase (PostgreSQL) when Lakebase env vars are set. It uses `myproject.lakebase_auth.get_password()` for token rotation (same pattern as the working example in `~/with-django`); otherwise it falls back to `DATABASE_URL`. The root URL shows a simple “Django + Lakebase” demo page with DB version and applied migrations.
 
 ## Clone the repository
 

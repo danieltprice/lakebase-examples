@@ -1,6 +1,6 @@
 # Getting started with Databricks Lakebase and Python (psycopg v3)
 
-This example connects to Lakebase from Python using [psycopg](https://pypi.org/project/psycopg/) (v3). The `lakebase_auth` module provides `get_connection_kwargs()` with lazy token refresh; scripts use `psycopg.connect(**get_connection_kwargs())`.
+This example connects to Lakebase from Python using [psycopg](https://pypi.org/project/psycopg/) (v3). The `lakebase_auth` module provides `get_connection_kwargs()` with lazy token refresh; scripts use `psycopg.connect(**get_connection_kwargs())`. The implementation matches the working example in `~/with-python-psycopg` (e.g. `_fetch_api_token` / `_fetch_db_token`, host.rstrip("/"), and robust expire-time parsing).
 
 ## Clone the repository
 

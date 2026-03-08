@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 from lakebase_auth import get_connection_kwargs
 
+# Load environment variables from .env file
 load_dotenv()
 
 try:

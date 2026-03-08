@@ -9,7 +9,7 @@ let expiresAt = 0;
 let refreshPromise = null;
 
 async function fetchToken() {
-  const host = process.env.DATABRICKS_HOST;
+  const host = (process.env.DATABRICKS_HOST || "").replace(/\/$/, "");
   const clientId = process.env.DATABRICKS_CLIENT_ID;
   const clientSecret = process.env.DATABRICKS_CLIENT_SECRET;
   const endpoint = process.env.LAKEBASE_ENDPOINT;

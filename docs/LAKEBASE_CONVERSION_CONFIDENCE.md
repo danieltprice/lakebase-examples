@@ -49,11 +49,11 @@ Rough confidence that each converted app will run and connect to Lakebase as int
 
 | App | Confidence | Notes |
 |-----|------------|--------|
-| with-django | Medium | settings.py conditional; get_connection_kwargs() at import; migrations may need DATABASE_URL. |
+| with-django | High | Aligned with working example in ~/with-django: myproject.lakebase_auth.get_password(), same DATABASES shape and OPTIONS; conditional fallback to DATABASE_URL. |
 | with-fastapi | High | lakebase_auth.get_connection_url() + async engine; same as other Python async. |
 | with-flask | High | lakebase_auth.get_connection_kwargs() + psycopg2; used elsewhere. |
 | with-python-asyncpg | High | lakebase_auth.get_connection_url() + asyncpg. |
-| with-python-psycopg | High | lakebase_auth.get_connection_kwargs() + psycopg. |
+| with-python-psycopg | High | Aligned with working example in ~/with-python-psycopg: lakebase_auth with _fetch_api_token/_fetch_db_token, host.rstrip("/"), urlencode, robust expire parsing. |
 | with-python-psycopg2 | High | Same as Flask-style kwargs. |
 | with-sqlalchemy-asyncpg | High | lakebase_auth.get_connection_url(); same pattern as FastAPI. |
 
@@ -85,26 +85,6 @@ Rough confidence that each converted app will run and connect to Lakebase as int
 
 ---
 
-## deploy-with-*
-
-| App | Confidence | Notes |
-|-----|------------|--------|
-| deploy-with-render, deploy-with-railway, deploy-with-heroku | High | Same lib/lakebase.js pool as Express examples. |
-| deploy-with-netlify-functions | Medium | getSql() in serverless; cold start and module cache. |
-| deploy-with-cloudflare-workers | Medium | getSql(env) + neon in Workers; env and cache. |
-| deploy-with-cloudflare-pages | Medium | Same as Workers; two copies of lakebase.js (root + my-neon-page). |
-| deploy-with-deno | Low | Docs only; app still uses DATABASE_URL; user must set from script. |
-
----
-
-## auth
-
-| App | Confidence | Notes |
-|-----|------------|--------|
-| auth/with-authjs-next | High | pg Pool from lib/lakebase; @auth/pg-adapter accepts pg Pool. |
-
----
-
 ## ai/*
 
 | App | Confidence | Notes |
@@ -129,7 +109,6 @@ Rough confidence that each converted app will run and connect to Lakebase as int
 1. **Rust** – In `with-rust-postgres` and `with-rust-tokio-postgres`, set `edition = "2021"` in Cargo.toml if the toolchain doesn’t support 2024.
 2. **ai/llamaindex/rag-nextjs** – If PGVectorStore from `llamaindex/storage/vectorStore/PGVectorStore` expects a top-level `connectionString`, change to that and remove `clientConfig`.
 3. **with-micronaut-kotlin** – Document “run script to set LAKEBASE_JDBC_URL (and optionally USERNAME/PASSWORD) before starting app.”
-4. **deploy-with-deno** – Either add a small Deno lakebase module that fetches token and builds DATABASE_URL, or document “set DATABASE_URL from token script before starting.”
 
 ---
 
