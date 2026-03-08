@@ -1,6 +1,4 @@
-import 'dotenv/config'
-import { neon } from '@neondatabase/serverless'
+// Re-export Lakebase pool for SvelteKit server-side usage.
+import { pool } from '$lib/lakebase';
 
-const connectionString: string = process.env.DATABASE_URL as string
-
-export default neon(connectionString)
+export default pool;

@@ -1,55 +1,46 @@
-# Getting started with Neon and Electric SQL
+# Getting started with Databricks Lakebase and Electric SQL
+
+This example runs [Electric SQL](https://electric-sql.com) in Docker, connected to a Postgres database. For Databricks Lakebase, the connection string is built from a short-lived token using the provided script.
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/en)
+- [Node.js](https://nodejs.org/)
 - [Docker](https://www.docker.com/)
+- Python 3 (for the connection-string script)
 
-## Project Structure
+## Project structure
 
-- `docker-compose.yaml`: Defines the Electric SQL service configuration.
-- `react-app/src/App.tsx`: Contains a React component that uses Electric SQL.
+- `docker-compose.yaml` – Electric SQL service; expects `DATABASE_URL` in the environment.
+- `scripts/get-database-url.sh` – Fetches a Lakebase token and prints a Postgres URL.
+- `react-app/` – React app that uses the Electric sync API at `http://localhost:3000`.
 
-## Store your Neon credentials
+## Configure Lakebase
 
-**Store your Neon credentials in the `docker-compose.yaml` file.**
+1. Copy `.env.example` to `.env` and set `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST` (and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`).
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
+2. Build a connection string (token is short-lived; restart the container when it expires or re-export before starting):
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-## Docker Compose Configuration
-
-The `docker-compose.yaml` file sets up the Electric SQL service:
-
-- Uses the `electricsql/electric` image
-- Connects to a PostgreSQL database (Neon DB in this case)
-- Exposes port 3000
-
-## React Application
-
-The `App.tsx` file contains a simple React component that:
-
-- Uses the `useShape` hook from `@electric-sql/react`
-- Fetches data from `http://localhost:3000/v1/shape/foo`
-- Renders the fetched data as a JSON string
-
-To customize the application, modify the `url` in the `useShape` hook and adjust the rendering logic as needed.
-
-## Getting Started
-
-1. Start the Electric SQL service:
+   ```bash
+   source .env   # or export the vars
+   chmod +x scripts/get-database-url.sh
+   export DATABASE_URL=$(./scripts/get-database-url.sh)
    ```
+
+3. Start Electric:
+
+   ```bash
    docker compose up
    ```
 
-2. Run the React application:
+4. In another terminal, run the React app:
+
+   ```bash
+   cd react-app && npm install && npm run dev
    ```
-   cd react-app && npm run dev
-   ```
+
+The React app uses the `useShape` hook from `@electric-sql/react` and talks to `http://localhost:3000/v1/shape/foo`. Adjust the shape URL and rendering in `react-app/src/App.tsx` as needed.
+
+## Notes
+
+- Lakebase tokens expire (typically after about an hour). If the Electric container loses the connection, re-run `export DATABASE_URL=$(./scripts/get-database-url.sh)` and restart with `docker compose up`.
+- For a long-running setup, consider a token-refresh sidecar or a proxy that injects a fresh token.

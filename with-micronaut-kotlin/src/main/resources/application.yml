@@ -3,9 +3,10 @@ micronaut:
     name: with-micronaut-kotlin
 datasources:
   default:
-    url: "jdbc:postgresql://endpoint.neon.tech/dbname?sslmode=require&channelBinding=require"
-    username: "<your-db-username>"
-    password: "<your-db-password>"
+    # For Lakebase: set LAKEBASE_JDBC_URL (and optionally username/password) from env, e.g. from a script that fetches a short-lived token.
+    url: "${LAKEBASE_JDBC_URL:jdbc:postgresql://localhost:5432/databricks_postgres?sslmode=require}"
+    username: "${LAKEBASE_USERNAME:}"
+    password: "${LAKEBASE_PASSWORD:}"
     driver-class-name: org.postgresql.Driver
     db-type: postgres
     dialect: POSTGRES

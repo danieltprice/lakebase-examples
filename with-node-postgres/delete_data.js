@@ -1,12 +1,5 @@
 import 'dotenv/config';
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    require: true,
-  },
-});
+import { pool } from './lib/lakebase.js';
 
 async function deleteData() {
   const client = await pool.connect();

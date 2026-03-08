@@ -1,15 +1,9 @@
-import { neon } from '@neondatabase/serverless';
+/**
+ * Run with: bun run using-neon-serverless-driver.ts
+ * Uses pg pool with Lakebase token rotation (standard driver).
+ */
+import { pool } from "./lib/lakebase";
 
-const connectionString = process.env.POSTGRES_URL as string;
-
-if (!connectionString) {
-  throw new Error(`Please add a POSTGRES_URL environment variable.`);
-}
-
-// Bun automatically loads the POSTGRES_URL from .env.local
-// Refer to: https://bun.sh/docs/runtime/env for more information
-const sql = neon(connectionString);
-
-const rows = await sql`SELECT version()`;
-
-console.log(rows[0]);
+const result = await pool.query("SELECT version()");
+console.log(result.rows[0]);
+await pool.end();

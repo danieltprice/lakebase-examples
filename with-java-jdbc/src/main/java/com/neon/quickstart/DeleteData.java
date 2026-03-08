@@ -6,7 +6,13 @@ import java.sql.*;
 public class DeleteData {
     public static void main(String[] args) {
         Dotenv dotenv = Dotenv.load();
-        String connString = dotenv.get("DATABASE_URL");
+        String connString;
+        try {
+            connString = LakebaseAuth.getConnectionString(dotenv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "DELETE FROM books WHERE title = ?;";
 
         try (Connection conn = DriverManager.getConnection(connString);

@@ -1,54 +1,27 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Getting started with Databricks Lakebase and Bun
 
-# Getting started with Neon and Bun
+This example connects to Lakebase from [Bun](https://bun.sh) using the **pg** driver with a password callback for token rotation. Bun loads `.env` automatically; set Lakebase env vars there.
 
 ## Clone the repository
 
 ```bash
-bunx degit neondatabase/examples/with-bun ./with-bun
-```
-
-Move into the project directory:
-
-```bash
+bunx degit databricks-solutions/lakebase-examples/with-bun ./with-bun
 cd with-bun
 ```
 
-Run the command below to copy the `.env.example` file:
+## Configure Lakebase
 
-```
-cp .env.example .env.local
-```
+Copy `.env.example` to `.env` (or `.env.local`) and set `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST` (and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`).
 
-## Store your Neon credentials
+## Before you run
 
-Store your Neon credentials in your `.env` file.
+Create a Lakebase instance, set up a service principal, grant it database access, and set `LAKEBASE_ENDPOINT` / `LAKEBASE_HOST` (see main repo or other examples).
 
-```
-POSTGRES_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
-
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-Run the command below to install project dependencies:
+## Run the application
 
 ```bash
 bun install
+bun run using-neon-serverless-driver.ts
 ```
 
-Run the Bun application using the following command:
-
-```bash
-bun run using-bun-sql.ts # for using Bun.sql
-bun run run using-neon-serverless-driver.ts # for using Neon Serverless Driver
-```
+The script uses the shared `lib/lakebase.ts` pool (pg with token rotation) and prints the Postgres version.

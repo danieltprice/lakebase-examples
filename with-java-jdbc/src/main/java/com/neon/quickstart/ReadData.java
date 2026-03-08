@@ -6,7 +6,13 @@ import java.sql.*;
 public class ReadData {
     public static void main(String[] args) {
         Dotenv dotenv = Dotenv.load();
-        String connString = dotenv.get("DATABASE_URL");
+        String connString;
+        try {
+            connString = LakebaseAuth.getConnectionString(dotenv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         try (Connection conn = DriverManager.getConnection(connString);
              Statement stmt = conn.createStatement()) {

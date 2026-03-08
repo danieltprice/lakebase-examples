@@ -2,14 +2,12 @@ use tokio_postgres;
 use dotenvy::dotenv;
 use openssl::ssl::{SslConnector, SslMethod};
 use postgres_openssl::MakeTlsConnector;
-use std::env;
+use with_rust_tokio_postgres::lakebase;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-
-    // Load environment variables from .env file
     dotenv()?;
-    let conn_string = env::var("DATABASE_URL")?;
+    let conn_string = lakebase::get_connection_string().await?;
 
     let builder = SslConnector::builder(SslMethod::tls())?;
     let connector = MakeTlsConnector::new(builder.build());

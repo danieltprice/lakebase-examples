@@ -1,8 +1,10 @@
 import { PGVectorStore } from 'llamaindex/storage/vectorStore/PGVectorStore'
+import { getConnectionString } from './lakebase'
 
-const vectorStore = new PGVectorStore({
-  dimensions: 512,
-  connectionString: process.env.POSTGRES_URL,
-})
-
-export default vectorStore
+export async function getVectorStore() {
+  const connectionString = await getConnectionString()
+  return new PGVectorStore({
+    dimensions: 512,
+    connectionString,
+  })
+}

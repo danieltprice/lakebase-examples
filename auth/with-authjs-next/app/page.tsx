@@ -1,11 +1,9 @@
 import TodoList from '@/app/TodoList'
 import { auth } from '@/auth'
-import { Pool } from '@neondatabase/serverless'
+import { pool } from '@/lib/lakebase'
 
 async function getTodos(userId: string) {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
   const { rows } = await pool.query('SELECT * FROM todos WHERE user_id = $1', [userId])
-  await pool.end()
   return rows
 }
 

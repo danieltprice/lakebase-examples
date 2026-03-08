@@ -1,4 +1,4 @@
-module with-golang
+module with-golang-gorm
 
 go 1.22.5
 

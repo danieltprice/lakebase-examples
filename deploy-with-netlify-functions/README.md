@@ -1,57 +1,24 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Deploy with Netlify Functions and Databricks Lakebase
 
-# Getting started with Neon and Netlify functions
+This example deploys a Netlify site with serverless functions that connect to **Databricks Lakebase**. The function uses `getSql()` from `lakebase.mjs`, which fetches a short-lived token and caches the Postgres client.
 
-This is the code repository for the guide on [how to deploy a Netlify functions application with Neon](https://neon.tech/docs/guides/netlify-functions). Follow the guide to set up your Neon project and configure the Netlify CLI. 
+## Lakebase setup
 
-## Store your Neon credentials
+1. Create a Lakebase instance and a service principal with database access.
+2. In Netlify (Site settings → Environment variables), add:
+   - `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`
+   - `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST`, and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`
 
-Run the command below to copy the `.env.example` file, to the `neon-netlify-example` directory, and rename it to `.env`.
-
-```
-cp .env.example neon-netlify-example/.env
-```
-
-Store your Neon credentials in this `.env` file.
-
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
-
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-## Test the application locally
-
-## Initialize a Netlify site
-
-Change to the `neon-netlify-example` directory and run the command below to install project dependencies:
+## Local test
 
 ```bash
-cd neon-netlify-example && npm install
-```
-
-Run the command below to initialize a new Netlify site:
-
-```bash
-netlify sites:create
-```
-
-Test running the application locally by running the command below:
-
-```bash
+cd neon-netlify-example
+cp ../.env.example .env
+# Edit .env with your Lakebase credentials
+npm install
 netlify dev
 ```
 
-## Deploy the application to Netlify platform
+## Deploy
 
-Follow the [guide](https://neon.tech/docs/guides/netlify-functions#deploying-your-netlify-site-and-function) for further instructions on how to deploy the functions to the Netlify platform.
+Deploy to Netlify and set the Lakebase environment variables in the dashboard.

@@ -161,7 +161,7 @@ export async function GET(request: NextRequest) {
     } satisfies SearchResponse)
   }
 
-  const sql = getDb()
+  const sql = await getDb()
   const normalizedQuery = normalize(query)
   const lowerQuery = query.toLowerCase().trim()
 

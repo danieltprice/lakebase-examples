@@ -1,47 +1,39 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
-
-# Getting started with Neon and Remix
+# Getting started with Databricks Lakebase and Remix
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-remix ./with-remix
+npx degit databricks-solutions/lakebase-examples/with-remix ./with-remix
 ```
 
-Run the command below to copy the `.env.example` file:
+Copy the `.env.example` file:
 
-```
+```bash
 cp .env.example .env
 ```
 
-## Store your Neon credentials
+## Configure your Lakebase credentials
 
-Store your Neon credentials in your `.env` file.
+Fill in your `.env` file with your Databricks service principal and Lakebase connection details (see `.env.example`). The app uses short-lived database tokens fetched automatically from Databricks — no manual credential rotation needed.
 
+## Before you run — complete these steps
+
+**1. Create a Lakebase instance** (if you don't have one)
+```bash
+databricks postgres create-project --display-name "my-project"
+databricks postgres create-branch "projects/<id>" --display-name "main"
+databricks postgres create-endpoint "projects/<id>/branches/<id>"
 ```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
+**2. Set up a service principal** in your Databricks workspace (Settings → Service Principals). Generate a client secret.
 
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
+**3. Grant the service principal database access** (connect with owner token from `databricks postgres generate-database-credential`, then run `CREATE EXTENSION databricks_auth`, `databricks_create_role`, and grant schema/table permissions).
 
-Run the command below to install project dependencies:
+**4. Find your `LAKEBASE_ENDPOINT` and `LAKEBASE_HOST`** using `databricks postgres list-projects`, `list-branches`, and `list-endpoints`.
 
-```
+## Install and run
+
+```bash
 npm install
-```
-
-Run the Remix application using the following command:
-
-```
 npm run dev
 ```

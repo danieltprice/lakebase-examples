@@ -2,13 +2,11 @@ use dotenvy::dotenv;
 use postgres::Client;
 use openssl::ssl::{SslConnector, SslMethod};
 use postgres_openssl::MakeTlsConnector;
-use std::env;
+use with_rust_postgres::lakebase;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-
-    // Load environment variables from .env file
     dotenv()?;
-    let conn_string = env::var("DATABASE_URL")?;
+    let conn_string = lakebase::get_connection_string()?;
 
     let builder = SslConnector::builder(SslMethod::tls())?;
     let connector = MakeTlsConnector::new(builder.build());

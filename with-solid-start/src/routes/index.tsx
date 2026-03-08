@@ -1,12 +1,10 @@
-import { neon } from "@neondatabase/serverless";
 import { createAsync, query } from "@solidjs/router";
+import { pool } from "~/lib/lakebase";
 
 const getVersion = query(async () => {
   "use server";
-  const sql = neon(`${process.env.DATABASE_URL}`);
-  const response = await sql`SELECT version()`;
-  const { version } = response[0];
-  return version;
+  const { rows } = await pool.query("SELECT version()");
+  return rows[0].version;
 }, "version");
 
 export const route = {

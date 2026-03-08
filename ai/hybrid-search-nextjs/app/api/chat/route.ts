@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 export const fetchCache = 'force-no-store'
 
-import { neon } from '@neondatabase/serverless'
+import { getSql } from '@/lib/lakebase'
 import { NextRequest } from 'next/server'
 import OpenAI from 'openai'
 
@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
     const { messages = [] } = (await request.json()) as { messages: Message[] }
     const userMessages = messages.filter((i) => i.role === 'user')
     const query = userMessages[userMessages.length - 1].content
-    
-    const sql = neon(process.env.DATABASE_URL!)
+
+    const sql = await getSql()
     const embeddingData = await openai.embeddings.create({
       model: 'text-embedding-3-small',
       input: query,

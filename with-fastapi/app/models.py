@@ -5,7 +5,7 @@ from .db import Base
 
 
 class Record(Base):
-    """SQLAlchemy ORM model for the playing_with_neon table."""
+    """SQLAlchemy ORM model for the playing_with_neon table (table name kept for compatibility)."""
 
     __tablename__ = "playing_with_neon"
 

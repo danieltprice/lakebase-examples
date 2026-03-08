@@ -1,14 +1,13 @@
-import postgres from "postgres";
+import { getSql } from "./lakebase";
+import type { LakebaseEnv } from "./lakebase";
 
-export interface Env {
-  HYPERDRIVE: Hyperdrive;
-}
+export interface Env extends LakebaseEnv {}
 
 export default {
-  async fetch(request, env, ctx): Promise<Response> {
-    const sql = postgres(env.HYPERDRIVE.connectionString);
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     try {
-      const result = await sql`SELECT * from public."Comment"`
+      const sql = await getSql(env);
+      const result = await sql`SELECT * from public."Comment"`;
       return Response.json({ result });
     } catch (e) {
       console.error(e);
@@ -18,4 +17,4 @@ export default {
       );
     }
   },
-} satisfies ExportedHandler<Env>;
+};

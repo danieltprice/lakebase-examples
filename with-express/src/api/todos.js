@@ -1,15 +1,15 @@
 const express = require("express");
-const { neon } = require("@neondatabase/serverless");
-
-const sql = neon(process.env.DATABASE_URL);
+const { pool } = require("../lib/lakebase");
 
 const router = express.Router();
 
 // Get all todos
 router.get("/", async (_, res, next) => {
   try {
-    await sql`CREATE TABLE IF NOT EXISTS todos (id SERIAL, text TEXT, completed BOOLEAN)`;
-    const todos = await sql`SELECT * FROM todos`;
+    await pool.query(
+      "CREATE TABLE IF NOT EXISTS todos (id SERIAL, text TEXT, completed BOOLEAN)"
+    );
+    const { rows: todos } = await pool.query("SELECT * FROM todos");
     return res.json(todos);
   } catch (err) {
     next(err);
@@ -20,7 +20,10 @@ router.get("/", async (_, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { text } = req.body;
-    await sql`INSERT INTO todos (text, completed) VALUES (${text}, false)`;
+    await pool.query(
+      "INSERT INTO todos (text, completed) VALUES ($1, false)",
+      [text]
+    );
     return res.status(200).send("Todo created successfully");
   } catch (err) {
     next(err);
@@ -32,7 +35,10 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const { completed } = req.body;
-    await sql`UPDATE todos SET completed=${completed} WHERE id=${id}`;
+    await pool.query("UPDATE todos SET completed = $1 WHERE id = $2", [
+      completed,
+      id,
+    ]);
     return res.status(200).send();
   } catch (err) {
     next(err);
@@ -43,7 +49,7 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    await sql`DELETE FROM todos WHERE id=${id}`;
+    await pool.query("DELETE FROM todos WHERE id = $1", [id]);
     return res.status(200).send();
   } catch (err) {
     next(err);

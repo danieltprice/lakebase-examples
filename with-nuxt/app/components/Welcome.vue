@@ -10,21 +10,21 @@ defineProps<{
         <div class="flex gap-6 items-center">
           <Icon class="w-16 h-16" name="logos:nuxt-icon" />
           <div class="text-3xl">+</div>
-          <Icon class="w-12 h-12" name="logos:neon-icon" />
+          <Icon class="w-12 h-12" name="ph:database-duotone" />
         </div>
         <h1 class="text-4xl font-bold text-center">
-          Welcome to Nuxt Neon!
+          Welcome to Nuxt + Lakebase!
         </h1>
-        <NuxtLink to="https://neon.tech/docs/guides/nuxt" class="w-full max-w-3xl bg-zinc-900 rounded-lg p-8 border border-zinc-800 hover:border-green-400">
+        <NuxtLink to="https://docs.databricks.com/lakebase" class="w-full max-w-3xl bg-zinc-900 rounded-lg p-8 border border-zinc-800 hover:border-green-400">
           <div class="flex flex-col items-center space-y-4">
             <div class="flex items-center gap-2 bg-zinc-800 p-3 rounded-lg">
               <Icon class="w-10 h-10 block" name="ph:rocket-duotone" />
             </div>
             <h2 class="text-2xl font-semibold">Get started</h2>
             <p class="text-zinc-400 text-center flex flex-col gap-2">
-              <span>Learn how to get started with Nuxt Neon and build your next project with ease.</span>
+              <span>Connect Nuxt to Databricks Lakebase (Postgres) with token rotation.</span>
               <span>
-                Neon Postgres version:
+                Postgres version:
                 <code class="bg-zinc-800 px-2 py-1 rounded text-xs">{{ version }}</code>
               </span>
             </p>
@@ -43,14 +43,14 @@ defineProps<{
               </div>
             </div>
           </NuxtLink>
-          <NuxtLink to="https://neon.tech/docs/introduction" class="bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-green-400">
+          <NuxtLink to="https://docs.databricks.com/lakebase" class="bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-green-400">
             <div class="flex items-start space-x-4">
               <div class="bg-zinc-800 p-2 rounded-lg">
                 <Icon class="w-8 h-8 block" name="ph:files-duotone" />
               </div>
               <div>
-                <h3 class="text-xl font-semibold mb-2">Neon Docs</h3>
-                <p class="text-zinc-400">We highly recommend you take a look at the Neon documentation to level up your Postgres game.</p>
+                <h3 class="text-xl font-semibold mb-2">Lakebase Docs</h3>
+                <p class="text-zinc-400">Databricks Lakebase: serverless Postgres with token-based auth and branching.</p>
               </div>
             </div>
           </NuxtLink>

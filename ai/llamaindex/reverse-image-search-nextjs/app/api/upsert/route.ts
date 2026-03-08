@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 export const fetchCache = 'force-no-store'
 
-import imageVectorStore from '@/lib/vectorStore'
+import { getVectorStore } from '@/lib/vectorStore'
 import { ImageDocument, Settings, VectorStoreIndex } from 'llamaindex'
 import { ClipEmbedding } from 'llamaindex/embeddings/ClipEmbedding'
 import { v4 as uuidv4 } from 'uuid'
@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     metadata: { url: dataUrl },
   })
   // Index the ImageDocument objects in the vector store
+  const imageVectorStore = await getVectorStore()
   await VectorStoreIndex.fromDocuments([document], { imageVectorStore })
   return new Response(null, { status: 200 })
 }

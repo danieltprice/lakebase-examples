@@ -1,22 +1,22 @@
-import { neon } from '@neondatabase/serverless'
+// Use Lakebase (getSql) when DATABRICKS_HOST and LAKEBASE_HOST are set; otherwise DATABASE_URL.
+import { getSql } from './lakebase'
 
-// Track which connection type is being used
-const isPooled = !!process.env.DATABASE_URL_POOLER
-const connectionString = process.env.DATABASE_URL_POOLER || process.env.DATABASE_URL
-
-// Log once at startup
-if (typeof window === 'undefined') {
-  console.log(`🔌 Database: ${isPooled ? 'pooled connection (PgBouncer)' : 'direct connection'}`)
+function useLakebase(): boolean {
+  return !!(typeof process !== 'undefined' && process.env?.DATABRICKS_HOST && process.env?.LAKEBASE_HOST)
 }
 
-export function getDb() {
-  if (!connectionString) {
-    throw new Error('DATABASE_URL or DATABASE_URL_POOLER environment variable is not set')
+export async function getDb() {
+  if (useLakebase()) {
+    return await getSql()
   }
-  // Connection caching is enabled by default in @neondatabase/serverless
+  const connectionString = process.env.DATABASE_URL_POOLER || process.env.DATABASE_URL
+  if (!connectionString) {
+    throw new Error('DATABASE_URL or Lakebase env vars (DATABRICKS_HOST, LAKEBASE_HOST, etc.) are required')
+  }
+  const { neon } = await import('@neondatabase/serverless')
   return neon(connectionString)
 }
 
 export function isUsingPooler(): boolean {
-  return isPooled
+  return !!(typeof process !== 'undefined' && process.env?.DATABASE_URL_POOLER)
 }

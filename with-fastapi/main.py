@@ -15,9 +15,9 @@ async def seed_sample_data():
         result = await session.execute(select(Record).limit(1))
         if result.scalar() is None:
             sample_records = [
-                Record(name="Hello Neon", value=1.0),
+                Record(name="Hello Lakebase", value=1.0),
                 Record(name="FastAPI Example", value=2.5),
-                Record(name="Serverless Postgres", value=42.0),
+                Record(name="Lakebase Postgres", value=42.0),
             ]
             session.add_all(sample_records)
             await session.commit()
@@ -37,8 +37,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Neon FastAPI Example",
-    description="A FastAPI application demonstrating Neon PostgreSQL integration",
+    title="Lakebase FastAPI Example",
+    description="A FastAPI application demonstrating Databricks Lakebase (PostgreSQL) integration",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -51,7 +51,7 @@ async def root():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Neon + FastAPI</title>
+        <title>Lakebase + FastAPI</title>
         <style>
             body { font-family: system-ui, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
             h1 { color: #00e699; }
@@ -62,7 +62,7 @@ async def root():
     </head>
     <body>
         <h1>Neon + FastAPI Example</h1>
-        <p>A FastAPI application connected to Neon serverless Postgres.</p>
+        <p>A FastAPI application connected to Databricks Lakebase.</p>
         
         <h2>Quick Links</h2>
         <ul>
@@ -82,7 +82,7 @@ async def root():
             <li><code>DELETE /records/{id}</code> - Delete a record</li>
         </ul>
         
-        <p>Visit <a href="https://neon.com">neon.com</a> to learn more about Neon.</p>
+        <p>Visit <a href="https://docs.databricks.com/lakebase">Databricks Lakebase</a> for more.</p>
     </body>
     </html>
     """

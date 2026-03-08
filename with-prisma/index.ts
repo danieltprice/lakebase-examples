@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { getPrisma } from "./lib/lakebase";
 
 async function main() {
+  const prisma = await getPrisma();
   await prisma.user.create({
     data: {
       name: "Alice",
@@ -33,14 +32,18 @@ async function main() {
     },
   });
   console.dir(allUsersAgain, { depth: null });
+  return prisma;
 }
 
 main()
-  .then(async () => {
+  .then(async (prisma) => {
     await prisma.$disconnect();
   })
   .catch(async (e) => {
     console.error(e);
-    await prisma.$disconnect();
+    try {
+      const prisma = await getPrisma();
+      await prisma.$disconnect();
+    } catch (_) {}
     process.exit(1);
   });

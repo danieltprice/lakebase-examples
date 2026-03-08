@@ -1,43 +1,18 @@
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-    <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Deploy with Cloudflare Pages and Databricks Lakebase
 
-# Getting started with Neon and Cloudflare Pages
+This example deploys a **Cloudflare Pages** site with Functions that connect to **Databricks Lakebase**. The functions use `getSql(env)` from `functions/lakebase.js`, which fetches a short-lived token and caches the Postgres client.
 
-This is the code repository for the guide on how to [deploy a Cloudflare Pages web application using Neon](https://neon.tech/docs/guides/cloudflare-pages). Follow the guide to set up the Neon project and your Cloudflare Pages application.
+## Lakebase setup
 
-## Store your Neon credentials
+1. Create a Lakebase instance and a service principal with database access.
+2. In Cloudflare Pages (Settings → Environment variables), add:
+   - `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`
+   - `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST`, and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`
 
-Run the command below to copy the `.env.example` file:
+## Local test
 
-```
-cp .env.example .env
-```
+Copy `.env.example` to `.dev.vars` for local development. Run with `npm run pages:dev` (or your Pages dev command).
 
-Store your Neon credentials in this `.env` file.
+## Deploy
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
-
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-## Test the application locally
-
-Run the command below to deploy the application locally:
-
-```bash
-npx wrangler pages dev -- npm run dev
-```
-
-## Deploy the application to Cloudflare Pages
-
-Follow the guide for instructions on how to deploy the application to the Cloudflare platform. Make sure to add the Neon credentials to the Cloudflare Pages environment variables.
+Deploy to Cloudflare Pages and set the Lakebase environment variables in the dashboard.

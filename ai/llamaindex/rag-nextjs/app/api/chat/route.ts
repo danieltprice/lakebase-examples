@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'
 
 import { NextRequest } from 'next/server'
-import vectorStore from '@/lib/vectorStore'
+import { getVectorStore } from '@/lib/vectorStore'
 import { ContextChatEngine, Settings, VectorStoreIndex } from 'llamaindex'
 import { OpenAI } from '@llamaindex/openai'
 import { Ollama } from '@llamaindex/ollama'
@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
   const userMessages = messages.filter((i) => i.role === 'user')
   const query = userMessages[userMessages.length - 1].content
   
+  const vectorStore = await getVectorStore()
   const index = await VectorStoreIndex.fromVectorStore(vectorStore)
   const retriever = index.asRetriever()
   const chatEngine = new ContextChatEngine({ retriever })

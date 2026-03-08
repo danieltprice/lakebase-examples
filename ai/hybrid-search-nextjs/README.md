@@ -1,57 +1,21 @@
-[![github-hybrid-search](/assets/images/github-hybrid-search.jpg)](https://console.neon.tech/signup)
+# Hybrid Search Chatbot (OpenAI + Databricks Lakebase)
 
-## Hybrid Search Chatbot (OpenAI)
+An AI-powered Hybrid Search chatbot with Next.js, **Databricks Lakebase** (Postgres with pgvector), and OpenAI. The app uses `lib/lakebase.ts` for token rotation.
 
-A starter application for an AI-powered Hybrid Search chatbot with Next.js, Neon Postgres (pgvector), and OpenAI. 
-
-- It allows users to input new information, embeds the input using the OpenAI text embedding API, and stores it in the Neon database along with the original text. 
-- Users can then query the system through a chat interface. The app takes the user's input, embeds it, and uses a hybrid search (combining full-text and semantic search) to retrieve the most relevant stored information. It then returns a list of relevant snippets to the user.
-
-[![](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/neondatabase/examples/tree/main/ai/hybrid-search-nextjs&env=DATABASE_URL,OPENAI_API_KEY)
+- Ingest content: embed with OpenAI and store in Lakebase with full-text and vector indexes.
+- Chat: embed the query and run hybrid search (full-text + semantic) to return relevant snippets.
 
 ## Prerequisites
 
-To follow along with this guide, you will need:
+- A Lakebase instance and service principal with database access (see main repo).
+- An OpenAI API key.
 
-- A Neon account. If you do not have one, sign up at [Neon](https://neon.tech). Your Neon project comes with a ready-to-use Postgres database named `neondb`. We'll use this database in the following examples.
-- An OpenAI API key. If you do not have an OpenAI account, [sign up](https://platform.openai.com/signup) and navigate to the [API keys](https://platform.openai.com/api-keys) page to create an API key.  
-- [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed on your machine. 
+## Setup
 
-## Clone the repository
-
-```bash
-npx degit neondatabase/examples/ai/hybrid-search-nextjs ./hybrid-search-nextjs
-```
-
-## How to use
-
-1. Create a `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-2. Update the environment variables with your OpenAI API Key and Neon Postgres URL.
-
-3. Install the dependencies:
-
-```bash
-npm install
-```
-
-4. Run the application:
-
-```bash
-npm run dev
-```
-
-## Learn more
-
-- [Neon AI documentation](https://neon.com/docs/ai/ai-intro)
-- [pgvector documentation](https://github.com/pgvector/pgvector)
-- [OpenAI documentation](https://platform.openai.com/docs/introduction)
-- [Next.js documentation](https://nextjs.org/docs)
-
-## Authors
-
-- Rishi Raj Jain ([@rishi_raj_jain_](https://twitter.com/rishi_raj_jain_))
+1. Clone and install:
+   ```bash
+   npx degit databricks-solutions/lakebase-examples/ai/hybrid-search-nextjs ./hybrid-search-nextjs
+   cd hybrid-search-nextjs && npm install
+   ```
+2. Copy `.env.example` to `.env` and set Lakebase variables and `OPENAI_API_KEY`.
+3. Run `npm run dev`. Use the UI to add documents and chat.

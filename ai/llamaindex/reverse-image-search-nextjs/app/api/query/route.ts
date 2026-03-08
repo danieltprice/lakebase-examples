@@ -2,24 +2,19 @@ export const dynamic = 'force-dynamic'
 
 export const fetchCache = 'force-no-store'
 
-import vectorStore from '@/lib/vectorStore'
+import { getVectorStore } from '@/lib/vectorStore'
 import { ClipEmbedding } from 'llamaindex/embeddings/ClipEmbedding'
 import { VectorStoreQueryMode } from 'llamaindex/storage/vectorStore/types'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
-  // Parse the form data from the request to get the file
   const data = await request.formData()
   const file = data.get('file') as File
-  // If no file is provided, return a 400 Bad Request response
   if (!file) return new Response(null, { status: 400 })
-  // Read the file contents into a buffer
   const fileBuffer = await file.arrayBuffer()
-  // Create a Blob from the buffer with the correct MIME type
   const fileBlob = new Blob([fileBuffer], { type: file.type })
-  // Get the image embedding using ClipEmbedding
   const image_embedding = await new ClipEmbedding().getImageEmbedding(fileBlob)
-  // Query the Neon Postgres vector store for similar images
+  const vectorStore = await getVectorStore()
   const { similarities, nodes } = await vectorStore.query({
     similarityTopK: 100,
     queryEmbedding: image_embedding,

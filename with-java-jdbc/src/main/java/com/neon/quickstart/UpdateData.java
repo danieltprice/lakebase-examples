@@ -6,7 +6,13 @@ import java.sql.*;
 public class UpdateData {
     public static void main(String[] args) {
         Dotenv dotenv = Dotenv.load();
-        String connString = dotenv.get("DATABASE_URL");
+        String connString;
+        try {
+            connString = LakebaseAuth.getConnectionString(dotenv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "UPDATE books SET in_stock = ? WHERE title = ?;";
 
         try (Connection conn = DriverManager.getConnection(connString);

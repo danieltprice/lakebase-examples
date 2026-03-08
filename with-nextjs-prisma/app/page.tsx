@@ -1,8 +1,8 @@
-import { prisma } from '~/lib/prisma';
+import { getPrisma } from "~/lib/prisma";
 
 const getElements = async () => {
-  const elements = await prisma.element.findMany();
-  return elements;
+  const prisma = await getPrisma();
+  return prisma.element.findMany();
 };
 
 export default async function Home() {

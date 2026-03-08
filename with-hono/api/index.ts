@@ -1,7 +1,6 @@
 import { Hono } from "hono";
-import { env } from "hono/adapter";
 import { handle } from "hono/vercel";
-import { neon } from "@neondatabase/serverless";
+import { getSql } from "../lib/lakebase";
 
 export const config = {
   runtime: "edge",
@@ -10,8 +9,7 @@ export const config = {
 const app = new Hono().basePath("/api");
 
 app.get("/", async (c) => {
-  const { DATABASE_URL } = env<{ DATABASE_URL: string }>(c);
-  const sql = neon(DATABASE_URL);
+  const sql = await getSql();
   const result = await sql`SELECT version()`;
   const { version } = result[0];
   return c.json({ version });

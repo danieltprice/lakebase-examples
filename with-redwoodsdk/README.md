@@ -1,57 +1,32 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Getting started with Databricks Lakebase and RedwoodSDK
 
-# Getting started with Neon and RedwoodSDK
+This RedwoodSDK app runs on Cloudflare Workers and connects to Lakebase using **postgres.js**. The app uses `src/lakebase.ts` to fetch a short-lived token and cache a Postgres client.
 
 ## Clone the repository
 
-```shell
-npx degit neondatabase/examples/with-redwoodsdk ./with-redwoodsdk
+```bash
+npx degit databricks-solutions/lakebase-examples/with-redwoodsdk ./with-redwoodsdk
 cd with-redwoodsdk
 npm install
 ```
 
-Run the command below to copy the `.env.example` file:
+## Configure Lakebase
 
-```
-cp .env.example .env
-```
+Set Lakebase-related secrets in Wrangler (e.g. for local dev use `.dev.vars`; for production use `wrangler secret put`):
 
-## Store your Neon credentials
+- `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`
+- `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST`, and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`
 
-Store your Neon credentials in your `.dev.vars` file.
+Copy `.env.example` to `.dev.vars` and fill in the values for local development.
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-```
+## Before you run
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-- `&channel_binding=require` an optional query parameter that enforces channel binding for enhanced security.
+Create a Lakebase instance and a service principal with database access (see main repo or other examples).
 
+## Run the application
 
-## Running the dev server
-
-```shell
+```bash
 npm run dev
 ```
 
-Once the server is running, navigate to your application's URL ([`localhost:5173`](http://localhost:5173/)) in your browser. You should see a message confirming the database connection and displaying the PostgreSQL version, similar to:
-
-
-```text
-PostgreSQL 17.5 (6bc9ef8) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-```
-> The specific version may vary depending on the PostgreSQL version of your Neon project
-
-## Resources
-
-- [Connect a RedwoodSDK application to Neon](https://neon.tech/docs/guides/redwoodsdk)
-- [RedwoodSDK Documentation](https://docs.rwsdk.com/)
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers)
+Open the app URL (e.g. `http://localhost:5173`) to see the PostgreSQL version from Lakebase.

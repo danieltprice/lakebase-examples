@@ -11,6 +11,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
   ],
   runtimeConfig: {
-    databaseUrl: process.env.DATABASE_URL,
+    // Lakebase connection is handled in server/utils/lakebase.ts via env vars
   },
 })

@@ -1,28 +1,33 @@
 require("dotenv").config();
 const { Sequelize, Model, DataTypes } = require("sequelize");
+const { getConnectionString } = require("./lib/lakebase");
 
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+async function main() {
+  const connectionString = await getConnectionString();
+  const sequelize = new Sequelize(connectionString);
 
-class User extends Model {}
-User.init(
-  {
-    username: DataTypes.STRING,
-    birthday: DataTypes.DATE,
-  },
-  { sequelize, modelName: "user" }
-);
+  class User extends Model {}
+  User.init(
+    {
+      username: DataTypes.STRING,
+      birthday: DataTypes.DATE,
+    },
+    { sequelize, modelName: "user" }
+  );
 
-try {
-  sequelize.sync().then(() => {
-    User.create({
+  try {
+    await sequelize.sync();
+    const res = await User.create({
       username: "janedoe",
       birthday: new Date(1980, 6, 20),
-    }).then((res) => {
-      console.log(res.toJSON());
-      process.exit(0);
     });
-  });
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
+    console.log(res.toJSON());
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  } finally {
+    await sequelize.close();
+  }
   process.exit(0);
 }
+
+main();

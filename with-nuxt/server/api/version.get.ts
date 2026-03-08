@@ -1,9 +1,9 @@
-import { neon } from "@neondatabase/serverless";
+import { pool } from "../utils/lakebase";
 
-export default defineCachedEventHandler((event) => {
-  const { databaseUrl } = useRuntimeConfig(event)
-  const db = neon(databaseUrl);
-  return db('SELECT version()');
+export default defineCachedEventHandler(async () => {
+  const result = await pool.query("SELECT version()");
+  const row = result.rows[0];
+  return row ? { version: (row as { version: string }).version } : { version: "" };
 }, {
   maxAge: 60 * 60 * 24,
-})
+});

@@ -78,17 +78,32 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
+if os.getenv("DATABRICKS_HOST") and os.getenv("LAKEBASE_HOST"):
+    from lakebase_auth import get_connection_kwargs
+    _db = get_connection_kwargs()
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": _db["dbname"],
+            "USER": _db["user"],
+            "PASSWORD": _db["password"],
+            "HOST": _db["host"],
+            "PORT": _db["port"],
+            "OPTIONS": {"sslmode": _db["sslmode"]},
+        }
     }
-}
+else:
+    tmpPostgres = urlparse(os.getenv("DATABASE_URL", ""))
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": (tmpPostgres.path or "/").replace("/", "") or "postgres",
+            "USER": tmpPostgres.username or "",
+            "PASSWORD": tmpPostgres.password or "",
+            "HOST": tmpPostgres.hostname or "localhost",
+            "PORT": tmpPostgres.port or 5432,
+        }
+    }
 
 
 # Password validation

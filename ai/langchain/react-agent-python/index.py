@@ -9,7 +9,11 @@ from langgraph.checkpoint.postgres import PostgresSaver
 
 load_dotenv()
 
-DB_URI = os.environ.get("DATABASE_URL")
+if os.getenv("DATABRICKS_HOST") and os.getenv("LAKEBASE_HOST"):
+    from lakebase_auth import get_connection_url
+    DB_URI = get_connection_url()
+else:
+    DB_URI = os.environ.get("DATABASE_URL")
 
 connection_kwargs = {
     "autocommit": True,

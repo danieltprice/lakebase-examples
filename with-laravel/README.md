@@ -1,42 +1,29 @@
-# Laravel with Neon Postgres
+# Getting started with Databricks Lakebase and Laravel
 
-A Laravel 11 application configured to use [Neon](https://neon.tech) serverless Postgres.
+This Laravel 11 app connects to Databricks Lakebase (PostgreSQL) using short-lived tokens. When `DATABRICKS_HOST` and `LAKEBASE_HOST` are set, `AppServiceProvider` sets the pgsql connection URL from `App\LakebaseAuth::getConnectionUrl()` at boot.
 
-## Why Neon?
-
-- **Instant provisioning** - Create databases in seconds, not minutes
-- **Serverless scaling** - Automatically scales compute based on demand
-- **Database branching** - Create isolated database copies for development and testing
-- **Cost efficient** - Pay only for storage and compute you actually use
-
-## Quick Start
+## Clone the repository
 
 ```bash
-# Install dependencies
+npx degit databricks-solutions/lakebase-examples/with-laravel ./with-laravel
+cd with-laravel
+```
+
+## Configure Lakebase
+
+Copy `.env.example` to `.env`. Set `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST` (and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`). Keep `DB_CONNECTION=pgsql`. The app will use the Lakebase URL from token auth instead of `DB_URL` when these are set.
+
+## Before you run
+
+Create a Lakebase instance and a service principal with database access (see main repo or other examples). Run migrations as needed.
+
+## Run the application
+
+```bash
 composer install
-
-# Configure environment
-cp .env.example .env
 php artisan key:generate
-
-# Add your Neon connection string to .env
-# DB_URL=postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/dbname?sslmode=require
-
-# Run migrations and seed
-php artisan migrate --seed
-
-# Start development server
+php artisan migrate
 php artisan serve
 ```
 
-Visit `http://localhost:8000` to see the welcome page, or `http://localhost:8000/db-test` to verify database connectivity.
-
-## Configuration
-
-The application uses Laravel's `DB_URL` environment variable for Neon connection. Get your connection string from the [Neon Console](https://console.neon.tech).
-
-## Resources
-
-- [Neon Documentation](https://neon.tech/docs)
-- [Laravel Documentation](https://laravel.com/docs)
-- [Neon + Laravel Guide](https://neon.tech/docs/guides/laravel)
+Visit the database test route to confirm the connection.

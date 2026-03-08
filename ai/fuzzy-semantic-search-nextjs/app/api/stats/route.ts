@@ -18,7 +18,7 @@ export interface StatsResponse {
 }
 
 export async function GET() {
-  const sql = getDb()
+  const sql = await getDb()
 
   try {
     // Check if pg_stat_statements extension is available

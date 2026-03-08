@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\LakebaseAuth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if (env('DATABRICKS_HOST') && env('LAKEBASE_HOST')) {
+            try {
+                Config::set('database.connections.pgsql.url', LakebaseAuth::getConnectionUrl());
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
     }
 }

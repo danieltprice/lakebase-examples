@@ -1,14 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.Text;
 
-// --- 1. Read configuration and build connection string ---
-var config = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
-
-var connectionString = config.GetConnectionString("DefaultConnection");
+// --- 1. Get Lakebase connection string (short-lived token from Databricks) ---
+var connectionString = await NeonLibraryExample.LakebaseAuth.GetConnectionStringAsync();
 
 // --- 2. Establish connection and perform CRUD operations ---
 await using var conn = new NpgsqlConnection(connectionString);

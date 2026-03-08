@@ -1,6 +1,6 @@
-# RAG Starter with Next.js, Neon, and Inngest
+# RAG Starter with Next.js, Databricks Lakebase, and Inngest
 
-Build a Retrieval-Augmented Generation (RAG) system using Next.js, OpenAI, Neon's vector database, and Inngest.
+Build a RAG system using Next.js, OpenAI, **Databricks Lakebase** (Postgres with pgvector), and Inngest. The app uses `src/lib/lakebase.ts` for token rotation.
 
 ## Features
 

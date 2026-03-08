@@ -1,15 +1,15 @@
-import { neon } from "@neondatabase/serverless";
+import { pool } from "../lib/lakebase";
 
 export default function Page() {
   async function create(formData: FormData) {
     "use server";
-    // Create an instance of Neon's TS/JS driver
-    const sql = neon(`${process.env.DATABASE_URL}`);
-    // Create the comments table if it does not exist
-    await sql`CREATE TABLE IF NOT EXISTS comments (comment TEXT)`;
+    await pool.query(
+      "CREATE TABLE IF NOT EXISTS comments (comment TEXT)"
+    );
     const comment = formData.get("comment");
-    // Insert the comment from the form into the Postgres (powered by Neon)
-    await sql.query("INSERT INTO comments (comment) VALUES ($1)", [comment]);
+    await pool.query("INSERT INTO comments (comment) VALUES ($1)", [
+      comment,
+    ]);
   }
   return (
     <form

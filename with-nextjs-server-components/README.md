@@ -1,49 +1,28 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
-
-# Getting started with Neon and Next.js Server Components
+# Getting started with Databricks Lakebase and Next.js (Server Components)
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-nextjs-server-components ./with-nextjs-server-components
+npx degit databricks-solutions/lakebase-examples/with-nextjs-server-components ./with-nextjs-server-components
 ```
 
-[![](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/neondatabase/examples/tree/main/with-nextjs-server-components&env=DATABASE_URL)
+Copy the `.env.example` file and fill in your Databricks service principal and Lakebase connection details:
 
-Run the command below to copy the `.env.example` file:
-
-```
+```bash
 cp .env.example .env
 ```
 
-## Store your Neon credentials
+The app uses short-lived database tokens from Databricks — no manual credential rotation needed.
 
-Store your Neon credentials in your `.env` file.
+## Before you run
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
+Create a Lakebase instance, set up a service principal, grant it database access, and set `LAKEBASE_ENDPOINT` / `LAKEBASE_HOST` (see the main repo or other examples for the full checklist).
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
+## Install and run
 
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-Run the command below to install project dependencies:
-
-```
+```bash
 npm install
-```
-
-Run the Next.js application using the following command:
-
-```
 npm run dev
 ```
+
+The page displays the database version from a Server Component.

@@ -4,11 +4,7 @@ export function Welcome({ databaseVersion }: { databaseVersion: string }) {
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
-            <img
-              src="https://neon.tech/brand/neon-logo-dark-color.svg"
-              alt="Neon logo"
-              className="w-full"
-            />
+            <span className="text-xl font-semibold text-white">Databricks Lakebase</span>
           </div>
           <p className="text-white font-semibold text-sm">
             Database version: {databaseVersion}
@@ -43,7 +39,7 @@ const resources = [
     text: "React Router Docs",
   },
   {
-    href: "https://neon.tech/docs/introduction",
-    text: "Neon Docs",
+    href: "https://docs.databricks.com/lakebase",
+    text: "Lakebase Docs",
   },
 ];

@@ -1,47 +1,76 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
-
-# Getting started with Neon and SvelteKit
+# Getting started with Databricks Lakebase and SvelteKit
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-sveltekit ./with-sveltekit
+npx degit databricks-solutions/lakebase-examples/with-sveltekit ./with-sveltekit
 ```
 
-Run the command below to copy the `.env.example` file:
+Copy the `.env.example` file:
 
-```
+```bash
 cp .env.example .env
 ```
 
-## Store your Neon credentials
+## Configure your Lakebase credentials
 
-Store your Neon credentials in your `.env` file.
-
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
-
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-Run the command below to install project dependencies:
+Fill in your `.env` file with your Databricks service principal and Lakebase connection details:
 
 ```
+DATABRICKS_HOST=your-workspace.cloud.databricks.com
+DATABRICKS_CLIENT_ID=your-service-principal-client-id
+DATABRICKS_CLIENT_SECRET=your-service-principal-secret
+
+LAKEBASE_ENDPOINT=projects/<project-id>/branches/<branch-id>/endpoints/<endpoint-id>
+LAKEBASE_HOST=your-endpoint.database.<region>.cloud.databricks.com
+LAKEBASE_PORT=5432
+LAKEBASE_DATABASE=databricks_postgres
+```
+
+The app uses short-lived database tokens fetched automatically from Databricks — no manual credential rotation needed. The token is refreshed lazily before it expires.
+
+## Before you run — complete these steps
+
+**1. Create a Lakebase instance** (if you don't have one)
+```bash
+databricks postgres create-project --display-name "my-project"
+databricks postgres create-branch "projects/<id>" --display-name "main"
+databricks postgres create-endpoint "projects/<id>/branches/<id>"
+```
+
+**2. Set up a service principal**
+- Create one in your Databricks workspace under Settings → Service Principals
+- Generate a client secret and note the Client ID and Secret
+
+**3. Grant the service principal database access**
+
+Get an owner token to connect:
+```bash
+databricks postgres generate-database-credential \
+  "projects/<id>/branches/<id>/endpoints/<id>" -o json
+```
+
+Then connect with `psql` (use your Databricks email as user, the token as password) and run:
+```sql
+CREATE EXTENSION IF NOT EXISTS databricks_auth;
+SELECT databricks_create_role('<your-client-id>', 'SERVICE_PRINCIPAL');
+GRANT USAGE ON SCHEMA public TO "<your-client-id>";
+GRANT CREATE ON SCHEMA public TO "<your-client-id>";
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "<your-client-id>";
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "<your-client-id>";
+```
+
+**4. Find your `LAKEBASE_ENDPOINT` and `LAKEBASE_HOST`**
+```bash
+databricks postgres list-projects -o json
+databricks postgres list-branches "projects/<id>" -o json
+databricks postgres list-endpoints "projects/<id>/branches/<id>" -o json
+```
+The `name` field is your `LAKEBASE_ENDPOINT`. The `status.hosts.host` field is your `LAKEBASE_HOST`.
+
+## Install and run
+
+```bash
 npm install
-```
-
-Run the SvelteKit application using the following command:
-
-```
 npm run dev
 ```

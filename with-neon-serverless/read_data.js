@@ -1,14 +1,12 @@
 import 'dotenv/config';
-import { neon } from '@neondatabase/serverless';
-
-const sql = neon(process.env.DATABASE_URL);
+import { pool } from './lib/lakebase.js';
 
 async function readData() {
   try {
     console.log('Connection established');
 
-    // Fetch all rows from the books table
-    const books = await sql`SELECT * FROM books ORDER BY publication_year;`;
+    const result = await pool.query('SELECT * FROM books ORDER BY publication_year;');
+    const books = result.rows;
 
     console.log('\n--- Book Library ---');
     books.forEach((book) => {
@@ -19,6 +17,8 @@ async function readData() {
     console.log('--------------------\n');
   } catch (err) {
     console.error('Connection failed.', err);
+  } finally {
+    await pool.end();
   }
 }
 

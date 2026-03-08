@@ -1,28 +1,27 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-    <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-  </picture>
-<p align="center">
+# Databricks Lakebase Examples
 
-# Documentation
+## Background
 
-Visit https://neon.tech/docs/introduction to view the full documentation.
+Databricks Lakebase is a fully managed, serverless PostgreSQL database built into the Databricks Intelligence Platform. It enables operational, transactional workloads to run alongside your data and AI workloads — without leaving Databricks.
 
-# What is Neon
+These examples demonstrate how to connect to and build applications on Databricks Lakebase using a wide variety of languages, frameworks, and ORMs.
 
-Neon is a fully managed serverless PostgreSQL with a generous free tier. Neon separates storage and compute and offers modern developer features such as serverless, branching, bottomless storage, and more. Neon is open source and written in Rust.
+## What is this repository?
 
-# Community
+A curated collection of working code samples for integrating Databricks Lakebase into real applications. Each example lives in its own directory with a focused README and runnable code.
 
-The Neon community can be found on https://neon.tech/discord, where you can ask questions, voice ideas and share your projects.
+Examples are organized around:
+- **Languages**: Python, Go, Rust, Java, Ruby, Dart, Elixir, .NET, and more
+- **Frameworks**: FastAPI, Django, Flask, Next.js, Express, NestJS, Laravel, and more
+- **ORMs & query builders**: SQLAlchemy, Prisma, Drizzle, GORM, Sequelize, and more
+- **Deployment targets**: Vercel, Cloudflare Workers, Netlify, Railway, Render, Heroku, Deno, and more
 
-# Contributing
+## Important notices
 
-Please see our [CONTRIBUTING.md](./CONTRIBUTING.md).
+This repository can only accept contributions directly from Databricks personnel. If you are a customer looking to contribute, please reach out to your Databricks representative.
 
-# Authors
+Databricks support doesn't cover this content. For questions or bugs, please open a GitHub issue and the team will help on a best-effort basis.
 
-- Raouf Chebri ([@_raoufai](https://twitter.com/_raoufai))
-- Rishi Raj Jain ([@rishi_raj_jain_](https://twitter.com/rishi_raj_jain_))
+## Questions and issues
+
+Please file an issue on this repository if you run into errors with the examples. Thanks!

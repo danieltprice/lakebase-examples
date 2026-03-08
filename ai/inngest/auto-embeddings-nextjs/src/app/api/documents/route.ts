@@ -1,11 +1,10 @@
-import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
-
-const sql = neon(process.env.DATABASE_URL!);
+import { getSql } from "@/lib/lakebase";
 
 export async function POST(request: Request) {
   try {
     const { title, content } = await request.json();
+    const sql = await getSql();
 
     if (!title || !content) {
       return NextResponse.json(

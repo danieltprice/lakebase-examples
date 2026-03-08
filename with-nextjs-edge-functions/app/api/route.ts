@@ -1,10 +1,15 @@
 export const runtime = "edge";
 
-import { neon } from "@neondatabase/serverless";
+import { getSql } from "../../lib/lakebase";
 
 export async function GET() {
-  if (!process.env.DATABASE_URL) return new Response(null, { status: 500 });
-  const sql = neon(process.env.DATABASE_URL);
+  if (
+    !process.env.LAKEBASE_HOST ||
+    !process.env.DATABRICKS_CLIENT_ID
+  ) {
+    return new Response(null, { status: 500 });
+  }
+  const sql = await getSql();
   const response = await sql`SELECT version()`;
   return new Response(response[0].version);
 }

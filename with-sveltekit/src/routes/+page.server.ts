@@ -1,10 +1,10 @@
-import sql from '../postgres.server'
+import { pool } from '$lib/lakebase';
 
 /** @type {import('./$types').LayoutServerLoad} */
 export async function load({}) {
-  const response = await sql`SELECT version()`;
-  const { version } = response[0]
+  const { rows } = await pool.query('SELECT version()');
+  const { version } = rows[0];
   return {
-    version
-  }
+    version,
+  };
 }

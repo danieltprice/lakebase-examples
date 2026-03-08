@@ -1,13 +1,15 @@
 import asyncio
-import os
 
 import asyncpg
 from dotenv import load_dotenv
 
+from lakebase_auth import get_connection_url
+
 load_dotenv()
 
+
 async def run():
-    conn_string = os.getenv("DATABASE_URL")
+    conn_string = get_connection_url()
     conn = None
     try:
         conn = await asyncpg.connect(conn_string)

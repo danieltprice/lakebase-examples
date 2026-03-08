@@ -1,4 +1,4 @@
-module neon-go-quickstart
+module lakebase-go-quickstart
 
 go 1.24.5
 

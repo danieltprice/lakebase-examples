@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { pool } from "../lib/lakebase";
 
 export default async function HomePage() {
   const data = await getData();
@@ -6,9 +6,8 @@ export default async function HomePage() {
 }
 
 const getData = async () => {
-  const sql = neon(`${process.env.DATABASE_URL}`);
-  const result = await sql`SELECT version()`;
-  return result[0];
+  const { rows } = await pool.query("SELECT version()");
+  return rows[0];
 };
 
 export const getConfig = async () => {

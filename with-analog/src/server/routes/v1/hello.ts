@@ -1,9 +1,7 @@
 import { defineEventHandler } from 'h3';
-import { neon } from '@neondatabase/serverless'
-
-const sql = neon(import.meta.env.DATABASE_URL)
+import { pool } from '../../../lib/lakebase';
 
 export default defineEventHandler(async () => {
-  const response = await sql`SELECT version()`
-  return response[0]['version']
+  const { rows } = await pool.query('SELECT version()');
+  return rows[0]['version'];
 });

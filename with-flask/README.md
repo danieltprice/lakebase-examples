@@ -1,60 +1,22 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Getting started with Databricks Lakebase and Flask
 
-# Getting started with Neon and Flask
+This example connects to Lakebase from a Flask app using **psycopg2** and short-lived database tokens from Databricks.
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-flask ./with-flask
+npx degit databricks-solutions/lakebase-examples/with-flask ./with-flask
 ```
 
-Run the command below to copy the `.env.example` file:
+Copy the `.env.example` file and set Lakebase env vars (Databricks service principal + LAKEBASE_*). The app uses `lakebase_auth.get_connection_kwargs()` for the connection.
 
-```
-cp .env.example .env
-```
+## Before you run
 
-## Store your Neon credentials
+Create a Lakebase instance, set up a service principal, grant it database access, and set `LAKEBASE_ENDPOINT` / `LAKEBASE_HOST`.
 
-Store your Neon credentials in your `.env` file.
-
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
-
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-Run one of the following commands to create a virtual environment:
+## Run the application
 
 ```bash
-# Create a virtual environment
-python -m venv venv
-
-# Active the virtual environment (Windows)
-.\venv\Scripts\activate.bat
-
-# Active the virtual environment (Linux)
-source ./venv/bin/activate
-```
-
-Run the command below to install project dependencies:
-
-```
 pip install -r requirements.txt
-```
-
-Run the Flask application using the following command:
-
-```
-flask run --port 8000
+flask run
 ```

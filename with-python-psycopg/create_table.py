@@ -1,16 +1,12 @@
-import os
-
 import psycopg
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+from lakebase_auth import get_connection_kwargs
+
 load_dotenv()
 
-# Get the connection string from the environment variable
-conn_string = os.getenv("DATABASE_URL")
-
 try:
-    with psycopg.connect(conn_string) as conn:
+    with psycopg.connect(**get_connection_kwargs()) as conn:
         print("Connection established")
 
         # Open a cursor to perform database operations

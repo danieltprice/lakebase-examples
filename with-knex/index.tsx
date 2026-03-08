@@ -1,12 +1,14 @@
 import 'dotenv/config'
 import knex from 'knex'
+import { getConnectionString } from './lib/lakebase.js'
 
-const connectionString = process.env.DATABASE_URL
+const connectionString = await getConnectionString()
 
 const client = knex({
   client: 'pg',
   connection: {
     connectionString,
+    ssl: { rejectUnauthorized: true },
   },
 })
 

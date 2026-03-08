@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 export const fetchCache = 'force-no-store'
 
-import { neon } from '@neondatabase/serverless'
+import { getSql } from '@/lib/lakebase'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
@@ -12,7 +12,7 @@ const openai = new OpenAI({
 export async function POST(request: Request) {
   const { message: input } = await request.json()
   if (!input) return new Response(null, { status: 400 })
-  const sql = neon(process.env.DATABASE_URL!)
+  const sql = await getSql()
   await sql`CREATE EXTENSION IF NOT EXISTS vector;`
   await sql`
   create table if not exists documents (

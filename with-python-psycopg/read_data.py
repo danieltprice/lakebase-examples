@@ -1,14 +1,12 @@
-import os
-
 import psycopg
 from dotenv import load_dotenv
 
+from lakebase_auth import get_connection_kwargs
+
 load_dotenv()
 
-conn_string = os.getenv("DATABASE_URL")
-
 try:
-    with psycopg.connect(conn_string) as conn:
+    with psycopg.connect(**get_connection_kwargs()) as conn:
         print("Connection established")
         with conn.cursor() as cur:
             # Fetch all rows from the books table

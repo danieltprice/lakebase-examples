@@ -1,22 +1,17 @@
-import os
 import psycopg2
 from flask import Flask
-from dotenv import load_dotenv  
-from urllib.parse import urlparse
+from dotenv import load_dotenv
+
+from lakebase_auth import get_connection_kwargs
 
 load_dotenv()
 
 app = Flask(__name__)
 
+
 def get_db_connection():
-    p = urlparse(os.getenv("DATABASE_URL"))
-    return psycopg2.connect(
-        host=p.hostname,
-        database=p.path.replace("/", ""),
-        user=p.username,
-        password=p.password,
-        port=5432,
-    )
+    return psycopg2.connect(**get_connection_kwargs())
+
 
 @app.route("/")
 def index():

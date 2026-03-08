@@ -1,48 +1,28 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
-
-# Getting started with Neon and Solid Start
+# Getting started with Databricks Lakebase and Solid Start
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-solid-start ./with-sold-start
+npx degit databricks-solutions/lakebase-examples/with-solid-start ./with-solid-start
 ```
 
-Run the command below to copy the `.env.example` file:
+Copy the `.env.example` file:
 
-```
+```bash
 cp .env.example .env
 ```
 
-## Store your Neon credentials
+## Configure your Lakebase credentials
 
-Store your Neon credentials in your `.env` file.
+Fill in your `.env` file with your Databricks service principal and Lakebase connection details. The app uses short-lived database tokens fetched automatically from Databricks — no manual credential rotation needed.
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-```
+## Before you run
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-- `&channel_binding=require` an optional query parameter that enforces channel binding for enhanced security.
+Create a Lakebase instance, set up a service principal, grant it database access, and set `LAKEBASE_ENDPOINT` / `LAKEBASE_HOST` (see other examples in this repo for the full checklist).
 
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
+## Install and run
 
-Run the command below to install project dependencies:
-
-```
+```bash
 npm install
-```
-
-Run the Solid Start application using the following command:
-
-```
 npm run dev
 ```

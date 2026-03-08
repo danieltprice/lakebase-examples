@@ -1,62 +1,25 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Getting started with Databricks Lakebase and TanStack Start (static server functions)
 
-# Getting started with Neon and TanStack Start
+This TanStack Start app uses static server functions and connects to Lakebase via **pg** and **postgres.js** with token rotation. See `src/data/lakebase.ts` and `src/data/get-neon-data.ts`.
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-tanstack-start-static-server-functions ./with-tanstack-start-static-server-functions
+npx degit databricks-solutions/lakebase-examples/with-tanstack-start-static-server-functions ./with-tanstack-start-static-server-functions
+cd with-tanstack-start-static-server-functions
 ```
 
-## Create a .env file
+## Configure Lakebase
 
-Run the command below to copy the `.env.example` file:
+Copy `.env.example` to `.env` and set `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST` (and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`).
 
-```bash
-cp .env.example .env
-```
+## Before you run
 
-## Get your Neon credentials
+Create a Lakebase instance and a service principal with database access (see main repo or other examples).
 
-Obtain the database connection string from the Connection Details widget on the [Neon Dashboard](https://pg.new).
-
-## Add your database URL to the .env file
-
-Update the `.env` file with your database connection string:
-
-```txt
-# The connection string has the format `postgres://user:pass@host/db`
-DATABASE_URL=<your-string-here>
-```
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-## Install dependencies
-
-Run the command below to install project dependencies:
+## Run the application
 
 ```bash
 npm install
-```
-
-## Development
-
-Run the application using the following command:
-
-```bash
 npm run dev
-```
-
-Your application will be available at `http://localhost:3000`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
 ```

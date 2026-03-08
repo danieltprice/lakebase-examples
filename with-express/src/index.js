@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 4242;
 
 app.get("/", (_, res) => {
   res.json({
-    message: "Welcome to TODO API powered by Node.js, Express.js and Neon 🚀",
+    message: "Welcome to TODO API powered by Node.js, Express.js and Databricks Lakebase 🚀",
   });
 });
 

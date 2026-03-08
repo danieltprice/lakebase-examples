@@ -3,6 +3,7 @@ name = "with-hyperdrive"
 main = "src/index.ts"
 compatibility_date = "2024-12-05"
 compatibility_flags = ["nodejs_compat"]
-[[hyperdrive]]
-binding = "HYPERDRIVE"
-id = "..."
+
+# Set Lakebase env vars via .dev.vars (local) or Workers dashboard (production):
+# DATABRICKS_HOST, DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET,
+# LAKEBASE_ENDPOINT, LAKEBASE_HOST, LAKEBASE_PORT, LAKEBASE_DATABASE

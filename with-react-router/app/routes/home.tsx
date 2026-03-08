@@ -1,18 +1,17 @@
-import { neon } from "@neondatabase/serverless";
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
+import { pool } from "~/lib/lakebase";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Neon with React Router" },
-    { name: "description", content: "Welcome to React Router + Neon!" },
+    { title: "Lakebase with React Router" },
+    { name: "description", content: "Welcome to React Router + Databricks Lakebase!" },
   ];
 }
 
 export async function loader({}: Route.ClientLoaderArgs) {
-  const sql = neon(`${process.env.DATABASE_URL}`);
-  const response = await sql`SELECT version()`;
-  const { version } = response[0];
+  const { rows } = await pool.query("SELECT version()");
+  const { version } = rows[0];
   return { version };
 }
 

@@ -1,17 +1,16 @@
 import 'dotenv/config';
-import { neon } from '@neondatabase/serverless';
-
-const sql = neon(process.env.DATABASE_URL);
+import { pool } from './lib/lakebase.js';
 
 async function updateData() {
   try {
     console.log('Connection established');
 
-    // Update a data row in the table
-    await sql`UPDATE books SET in_stock = ${true} WHERE title = ${'Dune'}`;
+    await pool.query('UPDATE books SET in_stock = $1 WHERE title = $2', [true, 'Dune']);
     console.log("Updated stock status for 'Dune'.");
   } catch (err) {
     console.error('Connection failed.', err);
+  } finally {
+    await pool.end();
   }
 }
 

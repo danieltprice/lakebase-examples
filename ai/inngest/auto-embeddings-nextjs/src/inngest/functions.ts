@@ -1,12 +1,10 @@
 import { inngest } from "./client";
 import { OpenAI } from "openai";
-import { neon } from "@neondatabase/serverless";
+import { getSql } from "@/lib/lakebase";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-const sql = neon(process.env.DATABASE_URL!);
 
 export const generateEmbedding = inngest.createFunction(
   { id: "generate-document-embedding" },
@@ -14,7 +12,6 @@ export const generateEmbedding = inngest.createFunction(
   async ({ event, step }) => {
     const { id, title, content } = event.data.new;
 
-    // Generate embedding using OpenAI
     const embedding = await step.run("Generate embedding", async () => {
       const response = await openai.embeddings.create({
         model: "text-embedding-3-small",
@@ -24,8 +21,8 @@ export const generateEmbedding = inngest.createFunction(
       return response.data[0].embedding;
     });
 
-    // Store embedding in Neon
     await step.run("Store embedding", async () => {
+      const sql = await getSql();
       await sql`
         UPDATE documents 
         SET 

@@ -1,5 +1,6 @@
 import { NeonPostgres } from '@langchain/community/vectorstores/neon'
 import { OpenAIEmbeddings } from '@langchain/openai'
+import { getConnectionString } from './lakebase'
 
 const embeddings = new OpenAIEmbeddings({
   dimensions: 512,
@@ -7,7 +8,6 @@ const embeddings = new OpenAIEmbeddings({
 })
 
 export default async function loadVectorStore() {
-  return await NeonPostgres.initialize(embeddings, {
-    connectionString: process.env.POSTGRES_URL as string,
-  })
+  const connectionString = await getConnectionString()
+  return await NeonPostgres.initialize(embeddings, { connectionString })
 }

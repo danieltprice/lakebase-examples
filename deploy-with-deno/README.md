@@ -1,43 +1,24 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Deploy with Deno and Databricks Lakebase
 
-# Getting started with Neon and Deno
+This example shows a **Deno** server that connects to Postgres (e.g. **Databricks Lakebase**). The server reads `DATABASE_URL` from the environment.
 
-This is the code repository for the guide on [how to deploy a Deno application with Neon](https://neon.tech/docs/guides/deno#deploy-your-application-with-deno-deploy). Follow the guide to install all the prerequisites.
+## Lakebase setup
 
-## Store your Neon credentials
+For Lakebase, the database URL must include a short-lived token. You can:
 
-Run the command below to copy the `.env.example` file:
+1. Run a script (or use another example in this repo) to call the Databricks OIDC and postgres/credentials APIs, then set `DATABASE_URL` to the resulting connection string before starting the server.
+2. For Deno Deploy, set `DATABASE_URL` in the project’s environment variables and refresh it periodically (e.g. via a cron or external process that updates the secret), since the token expires.
 
-```
+Required Lakebase env vars for the token script: `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST`, and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`.
+
+## Local run
+
+```bash
 cp .env.example .env
-```
-
-Store your Neon credentials in this `.env` file.
-
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
-
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-## Deploy the application locally
-
-Run the command below to deploy the application locally:
-
-```
+# Edit .env: set DATABASE_URL (e.g. from a script that fetches the Lakebase token)
 export $(grep -v '^#' .env | xargs) && deno run --allow-env --allow-net server.ts
 ```
 
-## Deploy the application to Deno Deploy platform
+## Deploy to Deno Deploy
 
-Follow the guide to learn how to deploy to the Deno Deploy platform.
+Deploy the app and set `DATABASE_URL` (and any other env vars) in the Deno Deploy project settings. Use a URL that includes a valid Lakebase token; refresh the token as needed.

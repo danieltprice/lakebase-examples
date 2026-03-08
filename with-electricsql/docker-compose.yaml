@@ -1,9 +1,11 @@
+# Set DATABASE_URL before running: export DATABASE_URL=$(./scripts/get-database-url.sh)
+# Or copy .env.example to .env and run the script, then: docker compose up
 version: "3.3"
-name: "electric_quickstart"
+name: "electric_lakebase"
 services:
   electric:
     image: electricsql/electric
     environment:
-      DATABASE_URL: postgresql://neondb_owner:***@ep-***.us-east-1.aws.neon.tech/neondb?sslmode=require
+      DATABASE_URL: ${DATABASE_URL}
     ports:
       - "3000:3000"

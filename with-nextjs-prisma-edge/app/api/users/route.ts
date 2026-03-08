@@ -1,14 +1,15 @@
-export const runtime = 'edge'
+export const runtime = "edge";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
-export const fetchCache = 'force-no-store'
+export const fetchCache = "force-no-store";
 
-import prisma from '@/lib/prisma.server'
+import { getPrisma } from "@/lib/prisma.server";
 
 export async function GET() {
-  const startTime = Date.now()
-  const users = await prisma.users.findMany()
-  const duration = Date.now() - startTime
-  return Response.json({ users, duration })
+  const startTime = Date.now();
+  const prisma = await getPrisma();
+  const users = await prisma.users.findMany();
+  const duration = Date.now() - startTime;
+  return Response.json({ users, duration });
 }

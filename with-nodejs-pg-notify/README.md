@@ -1,59 +1,26 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Using pg_notify with Databricks Lakebase and Node.js
 
-# Using pg_notify with Neon and NodeJS
+This example uses PostgreSQL `LISTEN`/`NOTIFY` with Lakebase. Scripts use the **pg** driver and `lib/lakebase.js` for token rotation.
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-nodejs-pg-notify ./with-nodejs-pg-notify
+npx degit databricks-solutions/lakebase-examples/with-nodejs-pg-notify ./with-nodejs-pg-notify
+cd with-nodejs-pg-notify
 ```
 
-Run the command below to copy the `.env.example` file:
+## Configure Lakebase
 
-```
-cp .env.example .env
-```
+Copy `.env.example` to `.env` and set `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST` (and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`).
 
-## Store your Neon credentials
+## Before you run
 
-Store your Neon credentials in your `.env` file.
+Create a Lakebase instance and a service principal with database access (see main repo or other examples).
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
+## Run the scripts
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
+1. **Setup** (create table and trigger): `node setup.js`
+2. **Listen** (in one terminal): `node listen.js`
+3. **Send** (in another): `node send.js`
 
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-Run the command below to install project dependencies:
-
-```
-npm install
-```
-
-Set up the database using the following command:
-
-```
-node setup.js
-```
-
-Run the script to listen to notifications, run the following command:
-
-```
-node listen.js
-```
-
-To insert a row into the table, run the following command:
-
-```
-node send.js
-```
+You should see the notification payload in the listen terminal.

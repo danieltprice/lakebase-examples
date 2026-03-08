@@ -1,16 +1,11 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
-import { neon } from '@neondatabase/serverless';
 import 'dotenv/config';
 import express from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './src/main.server';
-
-const DATABASE_URL = process.env['DATABASE_URL'];
-if (!DATABASE_URL)
-  throw new Error(`No DATABASE_URL environment variable is found.`);
-const sql = neon(DATABASE_URL);
+import { pool } from './src/lib/lakebase';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -36,8 +31,8 @@ export function app(): express.Express {
   );
 
   server.get('/api/data', async (req, res) => {
-    const tmp = await sql`SELECT version()`;
-    res.json(tmp[0]);
+    const { rows } = await pool.query('SELECT version()');
+    res.json(rows[0]);
   });
 
   // All regular routes use the Angular engine

@@ -1,6 +1,6 @@
-import { neon } from "@neondatabase/serverless";
 import { useLoaderData } from "@remix-run/react";
 import type { MetaFunction } from "@remix-run/node";
+import { pool } from "~/lib/lakebase";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,9 +10,8 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
-  const sql = neon(`${process.env.DATABASE_URL}`);
-  const response = await sql`SELECT version()`;
-  const { version } = response[0];
+  const { rows } = await pool.query("SELECT version()");
+  const { version } = rows[0];
   return version;
 };
 

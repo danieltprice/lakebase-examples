@@ -7,10 +7,16 @@ Howdy! Usual good software engineering practices apply. Write tests. Write comme
 3. Always have an example environment variables (if required to run the example) with comments. Following is a sample:
 
 ```bash
-# Postgres URL retrieved here: https://console.neon.tech
-POSTGRES_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
+# Databricks Lakebase – use service principal + endpoint (see any with-* example)
+DATABRICKS_HOST=your-workspace.cloud.databricks.com
+DATABRICKS_CLIENT_ID=your-service-principal-client-id
+DATABRICKS_CLIENT_SECRET=your-service-principal-secret
+LAKEBASE_ENDPOINT=projects/<id>/branches/<id>/endpoints/<id>
+LAKEBASE_HOST=your-endpoint.database.<region>.cloud.databricks.com
+LAKEBASE_PORT=5432
+LAKEBASE_DATABASE=databricks_postgres
 
-# OpenAI key retrieved here: https://platform.openai.com/api-keys
+# OpenAI key (if required by the example)
 OPENAI_API_KEY="sk-..."
 ```
 

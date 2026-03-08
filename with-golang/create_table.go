@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"lakebase-go-quickstart/lakebase"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
@@ -17,10 +19,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Get the connection string from the environment variable
-	connString := os.Getenv("DATABASE_URL")
-	if connString == "" {
-		fmt.Fprintf(os.Stderr, "DATABASE_URL not set\n")
+	connString, err := lakebase.GetConnectionString()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Lakebase connection: %v\n", err)
 		os.Exit(1)
 	}
 

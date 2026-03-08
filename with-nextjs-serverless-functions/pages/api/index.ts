@@ -1,15 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
-import { neon } from "@neondatabase/serverless";
-
-const sql = neon(process.env.DATABASE_URL);
+import { pool } from "../../lib/lakebase";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const response = await sql`SELECT version()`;
+  const { rows } = await pool.query("SELECT version()");
   res.status(200).json({
-    message: response[0].version,
+    message: rows[0].version,
   });
 }

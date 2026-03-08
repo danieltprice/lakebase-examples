@@ -1,16 +1,15 @@
 import { OpenAI } from "openai";
-import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+import { getSql } from "@/lib/lakebase";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const sql = neon(process.env.DATABASE_URL!);
-
 export async function POST(request: Request) {
   try {
     const { query } = await request.json();
+    const sql = await getSql();
 
     // Generate embedding for the search query
     const response = await openai.embeddings.create({

@@ -2,13 +2,12 @@ package main
 
 import (
 	"log"
-	"os"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"with-golang-gorm/lakebase"
 
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type Product struct {
@@ -18,11 +17,13 @@ type Product struct {
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	connStr := os.Getenv("DATABASE_URL")
+	connStr, err := lakebase.GetConnectionString()
+	if err != nil {
+		log.Fatal("Lakebase connection:", err)
+	}
 	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")

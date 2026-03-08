@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data: version } = await useFetch<any>('/api/version', {
-  transform: (data) => data[0].version
+  transform: (data: { version?: string }) => data?.version ?? ""
 })
 </script>
 

@@ -1,11 +1,8 @@
 import 'dotenv/config';
-import postgres from 'postgres';
-
-const sql = postgres(process.env.DATABASE_URL, {
-    ssl: 'require',
-});
+import { getSql } from './lib/lakebase.js';
 
 async function updateData() {
+    const sql = await getSql();
     try {
         console.log('Connection established');
 

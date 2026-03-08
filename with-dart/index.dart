@@ -1,14 +1,16 @@
-import 'dart:io';
 import 'package:postgres/postgres.dart';
+import 'package:with_dart/lakebase.dart';
 
 void main() async {
-  final conn = await Connection.open(Endpoint(
-    host: 'ep-...us-east-1.aws.neon.tech',
-    database: 'neondb',
-    username: 'neondb_owner',
-    password: '...',
-  ));
-  final result = await conn.execute("SELECT * from playing_with_neon;");
-  print(result);
-  exit(0);
+  final connParams = await getLakebaseConnection();
+  final conn = await Connection.open(
+    connParams.endpoint,
+    settings: connParams.settings,
+  );
+  try {
+    final result = await conn.execute("SELECT * from playing_with_neon;");
+    print(result);
+  } finally {
+    await conn.close();
+  }
 }

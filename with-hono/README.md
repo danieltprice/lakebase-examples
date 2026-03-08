@@ -1,47 +1,27 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
-  <img width="250px" alt="Neon Logo fallback" src="https://neon.com/brand/neon-logo-dark-color.svg">
-</picture>
+# Getting started with Databricks Lakebase and Hono (Edge)
 
-# Getting started with Neon and Hono
+This example connects to Lakebase from a Hono app deployed on Vercel Edge. It uses the **serverless driver** (`@neondatabase/serverless`) with a dynamically built connection string and token rotation (cached with TTL).
 
 ## Clone the repository
 
 ```bash
-npx degit neondatabase/examples/with-hono ./with-hono
+npx degit databricks-solutions/lakebase-examples/with-hono ./with-hono
+cd with-hono
 ```
 
-Run the command below to copy the `.env.example` file:
+## Configure Lakebase
 
-```
-cp .env.example .env
-```
+Copy `.env.example` to `.env` and set `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET`, `LAKEBASE_ENDPOINT`, `LAKEBASE_HOST` (and optionally `LAKEBASE_PORT`, `LAKEBASE_DATABASE`).
 
-## Store your Neon credentials
+## Before you run
 
-Store your Neon credentials in your `.env` file.
+Create a Lakebase instance and a service principal with database access (see main repo or other examples).
 
-```
-DATABASE_URL="postgresql://neondb_owner:...@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require"
-```
+## Run the application
 
-- `user` is the database user.
-- `password` is the database user’s password.
-- `endpoint_hostname` is the host with neon.tech as the [TLD](https://www.cloudflare.com/en-gb/learning/dns/top-level-domain/).
-- `dbname` is the name of the database. “neondb” is the default database created with each Neon project.
-- `?sslmode=require` an optional query parameter that enforces the [SSL](https://www.cloudflare.com/en-gb/learning/ssl/what-is-ssl/) mode while connecting to the Postgres instance for better security.
-
-**Important**: To ensure the security of your data, never expose your Neon credentials to the browser.
-
-Run the command below to install project dependencies:
-
-```
+```bash
 npm install
+npm run dev
 ```
 
-Run the Hono application using the following command:
-
-```
-npm run start
-```
+Deploy to Vercel; the API route runs on the edge and uses Lakebase with token rotation.

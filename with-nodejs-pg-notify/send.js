@@ -1,13 +1,11 @@
 // File: send.js
 
-// Load all the environment variables
 require("dotenv").config();
 
 const { Client } = require("pg");
+const { getPoolConfig } = require("./lib/lakebase");
 
-const connectionString = process.env.DATABASE_URL;
-
-const client = new Client({ connectionString });
+const client = new Client(getPoolConfig());
 
 async function insertRow(message) {
   try {

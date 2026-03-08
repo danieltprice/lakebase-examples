@@ -1,8 +1,8 @@
 // netlify/functions/get_coffee_blends/get_coffee_blends.mjs
-import { neon } from "@neondatabase/serverless";
+import { getSql } from "../lakebase.mjs";
 
 export async function handler(event) {
-  const sql = neon(process.env.DATABASE_URL);
+  const sql = await getSql();
   try {
     const rows = await sql`SELECT * FROM favorite_coffee_blends;`;
     return {

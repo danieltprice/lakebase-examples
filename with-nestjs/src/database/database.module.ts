@@ -1,16 +1,9 @@
-import { config } from 'dotenv';
 import { Module } from '@nestjs/common';
-import { neon } from '@neondatabase/serverless';
-
-config({
-  path: ['.env', '.env.production', '.env.local'],
-});
-
-const sql = neon(process.env.DATABASE_URL);
+import { pool } from './lakebase';
 
 const dbProvider = {
   provide: 'POSTGRES_POOL',
-  useValue: sql,
+  useValue: pool,
 };
 
 @Module({
